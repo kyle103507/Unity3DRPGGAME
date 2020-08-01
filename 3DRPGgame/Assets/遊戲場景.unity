@@ -4076,6 +4076,10 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: 9d7f28721c2867142bc592c0f32f038f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 5cc56289da56f264181486597e5b598f, type: 2}
     - target: {fileID: -4572219409397109828, guid: 9d7f28721c2867142bc592c0f32f038f, type: 3}
       propertyPath: m_AABB.m_Center.x
       value: -0.000000029802322
@@ -4138,7 +4142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 9d7f28721c2867142bc592c0f32f038f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.022
+      value: 0.004
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 9d7f28721c2867142bc592c0f32f038f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4196,11 +4200,23 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -1017268346894890077, guid: 9d7f28721c2867142bc592c0f32f038f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 9d7f28721c2867142bc592c0f32f038f, type: 3}
       propertyPath: m_Name
       value: "Y\u91AC"
       objectReference: {fileID: 0}
     - target: {fileID: 97638288533625420, guid: 9d7f28721c2867142bc592c0f32f038f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 512421010110527100, guid: 9d7f28721c2867142bc592c0f32f038f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 833863717390320118, guid: 9d7f28721c2867142bc592c0f32f038f, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
