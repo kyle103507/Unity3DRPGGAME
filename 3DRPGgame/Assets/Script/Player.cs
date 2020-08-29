@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
     [Header("旋轉速度"), Range(0, 1000)]
     public float turn = 1;
 
+    [HideInInspector]       //在屬性面板上面隱藏
+    public bool stop;       //停止不能移動
     private float attack = 10;
     private float hp = 100;
     private float mp = 50;
@@ -16,6 +18,7 @@ public class Player : MonoBehaviour
     private Rigidbody rig;
     private Animator ani;
     private Transform cam;  //攝影機跟物件
+    private NPC npc;
     #endregion
 
     #region 事件
@@ -25,11 +28,19 @@ public class Player : MonoBehaviour
         ani = GetComponent<Animator>();
         cam = GameObject.Find("攝影機跟蹤").transform;
 
+        npc = FindObjectOfType<NPC>();
     }
 
     private void FixedUpdate()
     {
+        if (stop) return;       //如果 停止 跳出
+        
         Move();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "骷顱頭") GetProp(collision.gameObject);
     }
     #endregion
 
@@ -64,9 +75,16 @@ public class Player : MonoBehaviour
 
     }
 
-    private void GetProp()
+    /// <summary>
+    /// 取得道具
+    /// </summary>
+    /// <param name="prop">碰到的道具</param>
+    private void GetProp(GameObject prop)
     {
-
+        Destroy(prop);
+        //播放音效 aud.PlayOneShot(soundProp);
+        npc.UpdateTextMission();
+            
     }
 
     private void Hit()
