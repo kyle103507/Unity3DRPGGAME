@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2b248ca61b24604f829e836077aaac7, type: 3}
+  m_Name: "Y\u91AC"
+  m_EditorClassIdentifier: 
+  _NPCState: 0
+  count: 20
+  dialogs:
+  - "\u62DC\u8A17\u4F60!!! \u5E6B\u6211\u53D6\u5F97\u7D72\u7DDA20\u500B"
+  - "\u9858\u5973\u795E\u7D66\u4E88\u4F60\u795D\u798F~"
+  - "\u591A\u8B1D\u5927\u5927\u7684\u5E6B\u5FD9"
