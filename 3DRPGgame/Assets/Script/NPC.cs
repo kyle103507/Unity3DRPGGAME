@@ -12,7 +12,7 @@ public class NPC : MonoBehaviour
     public Text textName;
     [Header("內容")]
     public Text textContent;
-    [Header("打字速度"),Range(0.1f , 1)]
+    [Header("打字速度"), Range(0.1f, 1)]
     public float printSpeed = 0.2f;
     [Header("打字音效")]
     public AudioClip soundPrint;
@@ -20,6 +20,8 @@ public class NPC : MonoBehaviour
     public RectTransform panelMission;
     [Header("任務數量")]
     public Text textMission;
+    [Header("傳送門")]
+    public GameObject[] doors;
 
     private AudioSource aud;
     private Animator ani;
@@ -45,7 +47,7 @@ public class NPC : MonoBehaviour
         textName.text = name;
         StartCoroutine(Print());
     }
-    
+
     /// <summary>
     /// 取消對話
     /// </summary>
@@ -105,6 +107,9 @@ public class NPC : MonoBehaviour
     private void Missioning()
     {
         if (count >= data.count) data._NPCState = NPCState.Finish;
+
+        for (int i = 0; i < doors.Length; i++)  doors[i].SetActive(true);
+            
     }
 
     /// <summary>
@@ -140,6 +145,6 @@ public class NPC : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.name == "U醬") CancleDialog();
-        
+
     }
 }
