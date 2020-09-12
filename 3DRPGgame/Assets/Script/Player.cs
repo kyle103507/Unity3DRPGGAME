@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
     [HideInInspector]       //在屬性面板上面隱藏
 
-   
+
     public bool stop;        //停止不能移動
 
 
@@ -22,13 +22,25 @@ public class Player : MonoBehaviour
     public Image barHp;
     public Image barMp;
     public Image barExp;
+    [Header("流星雨")]
+    public Transform stone;
+    public Text textLv;
 
-    private float attack = 10;
+    [HideInInspector]
+    public float stoneDamage = 200;         //流星雨傷害值
+    private float stonecost = 20;           //流星雨消耗
+    private float attack = 50;
     private float hp = 100;
     private float maxHp = 100;
     private float mp = 50;
+    private float maxMp = 100;
     private float exp;
+    private float maxExp = 100;               //經驗值需求      
     private int lv = 1;
+    private float restoreMp = 5;              //回魔/秒
+
+    public float[] exps = new float[99];
+
     private Rigidbody rig;
     private Animator ani;
     private Transform cam;  //攝影機跟物件
@@ -36,6 +48,13 @@ public class Player : MonoBehaviour
     #endregion
 
     #region 事件
+    private void Update()
+    {
+        Attack();
+        Skill();
+        RestoreMp();
+    }
+
     private void Awake()
     {
         rig = GetComponent<Rigidbody>();
@@ -43,12 +62,16 @@ public class Player : MonoBehaviour
         cam = GameObject.Find("攝影機跟蹤").transform;
 
         npc = FindObjectOfType<NPC>();
+
+        //迴圈輸入每一級需要的經驗值 每一級經驗需求 等於 等級 *100 
+        for (int i = 0; i < exps.Length; i++)   exps[i] = 100 * (i + 1);
+        
     }
 
     private void FixedUpdate()
     {
         if (stop) return;       //如果 停止 跳出
-        
+
         Move();
     }
 
@@ -72,6 +95,12 @@ public class Player : MonoBehaviour
             doors[1].GetComponent<CapsuleCollider>().enabled = false;       //關閉NPC 傳送門碰撞
             Invoke("OpenDoorNPC", 3);
         }
+
+        //如果 碰到物件的標籤 等於 怪蟲
+        if (other.tag == "怪蟲")
+        {
+            other.GetComponent<Enemy>().Hit(attack, transform);
+        }
     }
     #endregion
 
@@ -81,10 +110,13 @@ public class Player : MonoBehaviour
     {
         doors[0].GetComponent<CapsuleCollider>().enabled = true;
 
-    }  private void OpenDoorZombie()
+    }
+    private void OpenDoorZombie()
     {
         doors[1].GetComponent<CapsuleCollider>().enabled = true;
     }
+
+
     /// <summary>
     /// 移動方法:前後左右移動與動畫
     /// </summary>
@@ -107,12 +139,25 @@ public class Player : MonoBehaviour
 
     private void Attack()
     {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            ani.SetTrigger("攻擊觸發");
 
+        }
     }
 
     private void Skill()
     {
-
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (stonecost <= mp)
+            {
+                mp -= stonecost;
+                barMp.fillAmount = mp / maxMp;
+                Vector3 pos = transform.forward * 3 + transform.up * 5;
+                Instantiate(stone, transform.position + pos, transform.rotation);
+            }
+        }
     }
 
     /// <summary>
@@ -124,7 +169,7 @@ public class Player : MonoBehaviour
         Destroy(prop);
         //播放音效 aud.PlayOneShot(soundProp);
         npc.UpdateTextMission();
-            
+
     }
 
     /// <summary>
@@ -152,11 +197,48 @@ public class Player : MonoBehaviour
         enabled = false;                                //關閉此腳本
     }
 
-    private void Exp()
+    /// <summary>
+    /// 經驗值
+    /// </summary>
+    /// <param name="getExp">獲得的經驗值</param>
+    public void Exp(float getExp)
     {
+        exp += getExp;
+        barExp.fillAmount = exp / maxExp;
+
+       while (exp >= maxExp && lv < exps.Length) LeveUp();                  //當 經驗值 > = 經驗值需求 等級 < 經驗需求數量就 持續升級
+    }
+    
+    private void LeveUp()
+    {
+        lv++;                                       //等級遞增
+        maxHp += 10;                                //血量遞增
+        maxMp += 10;                                //魔力遞增
+        attack += 10;                               //攻擊遞增
+        stoneDamage += 15;                          //技能遞增
+
+        hp = maxHp;                                 //恢復血量
+        mp = maxMp;                                 //恢復魔力
+        exp -= maxExp;                              //扣掉最大經驗值保留多餘的經驗值
+
+        maxExp = exps[lv - 1];                      //下一級最大經驗值
+
+        barHp.fillAmount = 1;                       //血條全滿
+        barMp.fillAmount = 1;                       //魔力全滿
+        barExp.fillAmount = exp / maxExp;           //更新經驗值介面
+        textLv.text = "LV" + lv;                    //更新等級介面
 
     }
 
+    /// <summary>
+    /// 回魔
+    /// </summary>
+    private void RestoreMp()
+    {
+        mp += restoreMp * Time.deltaTime;
+        mp = Mathf.Clamp(mp, 0, maxMp);
+        barMp.fillAmount = mp / maxMp;
+    }
 
     #endregion
 }

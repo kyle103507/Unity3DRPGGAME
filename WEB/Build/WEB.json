@@ -1,0 +1,16 @@
+{
+"companyName": "Kyle",
+"productName": "3DRPGgame",
+"productVersion": "0.1",
+"dataUrl": "WEB.data.unityweb",
+"wasmCodeUrl": "WEB.wasm.code.unityweb",
+"wasmFrameworkUrl": "WEB.wasm.framework.unityweb",
+"graphicsAPI": ["WebGL 2.0","WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Light",
+"backgroundColor": "#F8F8F8",
+"cacheControl": {"default": "must-revalidate"},
+"developmentBuild": false,
+"multithreading": false,
+"unityVersion": "2019.4.10f1"
+}

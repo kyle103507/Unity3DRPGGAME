@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour
     public float attack = 40f;
     [Header("血量"), Range(30, 300)]
     public float hp = 200;
-    [Header("怪物的經驗值"), Range(30, 100)]
+    [Header("怪物的經驗值"), Range(30, 10000)]
     public float exp = 30;
     [Header("怪物攻擊停止距離"), Range(0.1f, 5)]
     public float distanceAttack = 1.5f;
@@ -17,10 +17,16 @@ public class Enemy : MonoBehaviour
     public float cd = 2.5f;
     [Header("面向玩家的速度"), Range(0.1f, 5f)]
     public float turn = 5f;
+    [Header("骷顱頭")]
+    public Transform skull;
+    [Header("掉落機率:0.3 代表 30%"),Range(0f,1f)]
+    public float skullProp = 0.3f;
+
 
     private NavMeshAgent nav;       //導覽代理器
     private Transform player;       //玩家
     private Animator ani;           //動畫控制器
+    private Rigidbody rig;          //剛體
     private float timer;             //計時器
 
 
@@ -29,6 +35,7 @@ public class Enemy : MonoBehaviour
     {
         ani = GetComponent<Animator>();                 //取得導覽代理器
         nav = GetComponent<NavMeshAgent>();             //取得元件
+        rig = GetComponent<Rigidbody>();
         nav.speed = speed;                              //設定速度
         nav.stoppingDistance = distanceAttack ;
 
@@ -61,6 +68,14 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.name == "碎石")
+        {
+            Hit(player.GetComponent<Player>().stoneDamage, player.transform);
+        }   
+    }
+
     private void Move()
     {
         nav.SetDestination(player.position);                        //追蹤玩家座標
@@ -83,5 +98,36 @@ public class Enemy : MonoBehaviour
 
         }
         ani.SetBool("Walk Forward", false);                             //停止撥放走路動畫
+
     }
+        public void Hit(float damage, Transform direction)                  //direction 方向
+        {
+            hp -= damage;
+            ani.SetTrigger("Take Damage");
+            rig.AddForce(direction.forward * 100 + direction.up * 150);                       
+
+            hp = Mathf.Clamp(hp, 0, 9999);                                  //夾住血量不要低於0
+
+            if (hp == 0) Dead();                                            //如果響亮等於零就死
+        }
+
+    /// <summary>
+    /// 死亡
+    /// </summary>
+    private void Dead()
+    {
+        GetComponent<CapsuleCollider>().enabled = false;
+
+        ani.SetBool("Die", true);                  //死亡動畫
+        enabled = false;                                //關閉此腳本
+        nav.isStopped = true;
+        player.GetComponent<Player>().Exp(exp);
+
+
+        float r = Random.Range(0f, 1f);
+
+        if (r <= skullProp) Instantiate(skull, transform.position + Vector3.up * 2 , transform.rotation);
+    }
+
+   
 }
